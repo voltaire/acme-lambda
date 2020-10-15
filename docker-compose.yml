@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+    controller:
+        build:
+            context: ./
+        restart: unless-stopped
+        init: true
+        env_file: ./env
+        logging:
+            driver: awslogs
+            awslogs-group: map-cert-controller
+            awslogs-create-group: "true"
+            awslogs-region: us-west-2
+        volumes:
+            - type: bind
+              source: /var/run/docker.sock
+              target: /var/run/docker.sock
+        cap_add:
+            - SYS_TIME
+            - SYS_NICE
