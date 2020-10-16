@@ -11,4 +11,4 @@ RUN apk --no-cache update && \
     cp /usr/share/zoneinfo/UTC /etc/localtime && \
     echo "UTC" > /etc/timezone
 ADD run /run
-CMD ["/run"]
+CMD ["/bin/sh", "/run"]

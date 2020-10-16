@@ -8,9 +8,10 @@ services:
         env_file: ./env
         logging:
             driver: awslogs
-            awslogs-group: map-cert-controller
-            awslogs-create-group: "true"
-            awslogs-region: us-west-2
+            options:
+                awslogs-group: map-cert-controller
+                awslogs-create-group: "true"
+                awslogs-region: us-west-2
         volumes:
             - type: bind
               source: /var/run/docker.sock
