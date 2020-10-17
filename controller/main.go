@@ -4,8 +4,9 @@ import (
 	"context"
 	"log"
 
-	"github.com/kelseyhightower/envconfig"
 	"github.com/docker/docker/client"
+	"github.com/kelseyhightower/envconfig"
+	"github.com/voltaire/map-cert/lego"
 )
 
 type Config struct {
@@ -33,7 +34,14 @@ func main() {
 	}
 
 	ctx := context.Background()
-	err = letsEncryptUsingDNS(ctx, cfg, docker)
+	err = lego.LetsEncryptUsingDNS(ctx, lego.Config{
+		AWSRegion:          cfg.AWSRegion,
+		AWSAccessKeyId:     cfg.AWSAccessKeyId,
+		AWSSecretAccessKey: cfg.AWSSecretAccessKey,
+		MapDomain:          cfg.MapDomain,
+		ACMEServer:         cfg.ACMEServer,
+		RegistrationEmail:  cfg.RegistrationEmail,
+	}, docker)
 	if err != nil {
 		log.Fatalf("error fetching certs: %s", err.Error())
 	}

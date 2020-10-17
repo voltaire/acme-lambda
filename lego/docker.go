@@ -1,4 +1,4 @@
-package main
+package lego
 
 import (
 	"context"
@@ -30,7 +30,18 @@ func buildLegoCmd(cfg Config) []string {
 	}
 }
 
-func letsEncryptUsingDNS(ctx context.Context, cfg Config, docker client.APIClient) error {
+// Config holds required configuration options
+type Config struct {
+	AWSRegion          string
+	AWSAccessKeyId     string
+	AWSSecretAccessKey string
+
+	ACMEServer        string
+	MapDomain         string
+	RegistrationEmail string
+}
+
+func LetsEncryptUsingDNS(ctx context.Context, cfg Config, docker client.APIClient) error {
 	container, err := docker.ContainerCreate(ctx, &container.Config{
 		Image: "docker.io/goacme/lego",
 		Env:   buildLegoEnv(cfg),
