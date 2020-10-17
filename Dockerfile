@@ -10,6 +10,6 @@ RUN apk --no-cache add tzdata openntpd && \
     echo "UTC" > /etc/timezone
 ADD start /start
 
-COPY --from=builder /controller /etc/periodic/monthly/controller
+COPY --from=builder /controller /etc/periodic/weekly/controller
 
 CMD ["/bin/sh", "/start"]
