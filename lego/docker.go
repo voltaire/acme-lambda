@@ -2,6 +2,8 @@ package lego
 
 import (
 	"context"
+	"io"
+	"io/ioutil"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/mount"
@@ -41,7 +43,22 @@ type Config struct {
 	RegistrationEmail string
 }
 
+func pullImage(ctx context.Context, docker client.APIClient) error {
+	r, err := docker.ImagePull(ctx, "docker.io/goacme/lego", types.ImagePullOptions{})
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+	_, err = io.Copy(ioutil.Discard, r)
+	return err
+}
+
 func LetsEncryptUsingDNS(ctx context.Context, cfg Config, docker client.APIClient) error {
+	err := pullImage(ctx, docker)
+	if err != nil {
+		return err
+	}
+
 	container, err := docker.ContainerCreate(ctx, &container.Config{
 		Image: "docker.io/goacme/lego",
 		Env:   buildLegoEnv(cfg),
