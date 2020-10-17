@@ -22,13 +22,14 @@ func buildLegoEnv(cfg Config) []string {
 
 func buildLegoCmd(cfg Config) []string {
 	return []string{
-		"lego",
-		"--domains " + cfg.MapDomain,
-		"--server " + cfg.ACMEServer,
-		"--accept-os",
-		"--email " + cfg.RegistrationEmail,
-		"--path /output",
-		"--dns route53",
+		"--domains=" + cfg.MapDomain,
+		"--server=" + cfg.ACMEServer,
+		"--accept-tos",
+		"--email=" + cfg.RegistrationEmail,
+		"--path=/output",
+		"--dns=route53",
+		"renew",
+		"--days=30",
 	}
 }
 
