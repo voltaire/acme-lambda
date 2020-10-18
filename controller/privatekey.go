@@ -48,10 +48,7 @@ func createPrivateKey(ctx context.Context, sm secretsmanageriface.SecretsManager
 	}
 
 	_, err = sm.CreateSecretWithContext(ctx, createSecretInput)
-	if err != nil {
-		return nil, err
-	}
-	return key, nil
+	return key, err
 }
 
 func loadPrivateKey(ctx context.Context, sm secretsmanageriface.SecretsManagerAPI, email string) (crypto.PrivateKey, error) {

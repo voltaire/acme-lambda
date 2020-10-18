@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	"github.com/go-acme/lego/v4/certificate"
 	"github.com/go-acme/lego/v4/providers/dns/linode"
 
 	"github.com/go-acme/lego/v4/certcrypto"
@@ -68,12 +67,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	request := certificate.ObtainRequest{
-		Domains: []string{cfg.MapDomain},
-		Bundle:  true,
-	}
-
-	cert, err := legoClient.Certificate.Obtain(request)
+	cert, err := obtainOrRenewCertificate(ctx, sm, legoClient, cfg.RegistrationEmail, cfg.MapDomain)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
