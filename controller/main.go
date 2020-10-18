@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/go-acme/lego/v4/providers/dns/linode"
+	"github.com/go-acme/lego/v4/registration"
 
 	"github.com/go-acme/lego/v4/certcrypto"
 
@@ -40,15 +41,12 @@ func main() {
 	}
 	sm := secretsmanager.New(sess)
 
-	pkey, err := loadOrCreatePrivateKey(ctx, sm, cfg.RegistrationEmail)
+	user, err := loadOrCreateUser(ctx, sm, cfg.RegistrationEmail)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	legoConfig := lego.NewConfig(&user{
-		Email:      cfg.RegistrationEmail,
-		PrivateKey: pkey,
-	})
+	legoConfig := lego.NewConfig(user)
 
 	legoConfig.CADirURL = cfg.ACMEServer
 	legoConfig.Certificate.KeyType = certcrypto.EC384
@@ -56,6 +54,18 @@ func main() {
 	legoClient, err := lego.NewClient(legoConfig)
 	if err != nil {
 		log.Fatal(err.Error())
+	}
+
+	if user.Registration == nil {
+		user.Registration, err = legoClient.Registration.Register(registration.RegisterOptions{TermsOfServiceAgreed: true})
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+
+		err = saveUser(ctx, sm, user)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
 	}
 
 	linodeDNSProvider, err := linode.NewDNSProvider()
