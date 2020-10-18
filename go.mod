@@ -3,14 +3,10 @@ module github.com/voltaire/map-cert
 go 1.15
 
 require (
-	github.com/Microsoft/go-winio v0.4.14 // indirect
-	github.com/docker/distribution v2.7.1+incompatible // indirect
-	github.com/docker/docker v1.13.1
-	github.com/docker/go-connections v0.4.0 // indirect
-	github.com/docker/go-units v0.4.0 // indirect
+	github.com/aws/aws-sdk-go v1.35.9
+	github.com/go-acme/lego/v4 v4.0.1
+	github.com/go-resty/resty/v2 v2.3.0 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/opencontainers/go-digest v1.0.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
-	github.com/stretchr/testify v1.6.1 // indirect
-	golang.org/x/net v0.0.0-20201010224723-4f7140c49acb // indirect
+	github.com/linode/linodego v0.21.2 // indirect
+	golang.org/x/net v0.0.0-20201016165138-7b1cca2348c0 // indirect
 )
