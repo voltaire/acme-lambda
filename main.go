@@ -16,9 +16,9 @@ import (
 )
 
 type Config struct {
-	MapDomain         string `envconfig:"MAP_DOMAIN" default:"map.tonkat.su"`
-	ACMEServer        string `evnconfig:"ACME_SERVER" default:"https://acme-v02.api.letsencrypt.org/directory"`
-	RegistrationEmail string `envconfig:"ACME_REGISTRATION_EMAIL" default:"bsd@voltaire.sh"`
+	MapDomains        []string `envconfig:"MAP_DOMAINS" default:"map.tonkat.su,oldmap.tonkat.su"`
+	ACMEServer        string   `evnconfig:"ACME_SERVER" default:"https://acme-v02.api.letsencrypt.org/directory"`
+	RegistrationEmail string   `envconfig:"ACME_REGISTRATION_EMAIL" default:"bsd@voltaire.sh"`
 
 	LinodeToken string `envconfig:"LINODE_TOKEN" required:"true"`
 
@@ -77,13 +77,15 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	cert, err := obtainOrRenewCertificate(ctx, sm, legoClient, cfg.RegistrationEmail, cfg.MapDomain)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	for _, mapDomain := range cfg.MapDomains {
+		cert, err := obtainOrRenewCertificate(ctx, sm, legoClient, cfg.RegistrationEmail, mapDomain)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
 
-	err = uploadCertToLinode(ctx, cfg.LinodeToken, cfg.MapDomain, cert.Certificate, cert.PrivateKey)
-	if err != nil {
-		log.Fatal(err)
+		err = uploadCertToLinode(ctx, cfg.LinodeToken, mapDomain, cert.Certificate, cert.PrivateKey)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
