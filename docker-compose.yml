@@ -5,7 +5,7 @@ services:
             context: ./
         restart: unless-stopped
         init: true
-        env_file: ./env
+        env_file: ./prod.env
         logging:
             driver: awslogs
             options:
