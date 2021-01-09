@@ -1,7 +1,0 @@
-#!/bin/sh
-
-# non blocking
-ntpd -s
-
-# runs in foreground
-crond -f -l 8
